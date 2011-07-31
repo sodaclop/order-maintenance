@@ -75,7 +75,7 @@ finger * insert(finger * const xf) {
   if (x->next == x) {
     x->next = h;
     x->prev = h;
-    h->tag = (~0) << 1;
+    h->tag = (~0) >> 1;
     return y;
   }
 
