@@ -43,27 +43,34 @@ finger * empty() {
   return ans;
 }
 
-// TODO: get back to base? get back to self?
+// Returns a finger to a record one past the record pointed to by the finger xf
 finger * insert(finger * const xf) {
   assert (NULL != xf);
   record * const x = xf->home;
   assert (NULL != x);
   assert (NULL != x->next);
 
+  // The finger y will eventually be the answer we return.
   finger * y = malloc(sizeof(finger));
   if (NULL == y) {
+    // malloc has failed
     return NULL;
   }
+  // The record h will be pointed to by the answer finger y
   record * h = malloc(sizeof(record));
   if (NULL == h) {
+    // malloc has failed
     free(y);
     return NULL;
   }
+  // Make the finger and its record point to each other:
   y->home = h;
   h->door = y;
+  // Set up the record so that it will be valid once its new neighbors point to it:
   h->prev = x;
   h->next = x->next;
   h->base = x->base;
+
 
   if (x->next == x) {
     x->next = h;
@@ -81,7 +88,9 @@ finger * insert(finger * const xf) {
   assert (1 == j2);
   while (wj <= j2) {
     ++j;
-    assert (j != 0);
+    /* Since j started as 1, if 0 == j, j has wrapped around, and the
+       structure is actually full. */
+    assert (0 != j);
     xj = xj->next;
     assert (NULL != xj);
     wj = xj->tag - x->tag;
@@ -91,6 +100,9 @@ finger * insert(finger * const xf) {
     }
     j2 = ((tag_t)j) * ((tag_t)j);
   }
+
+  /* reset the tags of j-1 records by evenly spacing them
+   */
   record * xk = x->next;
   for (count_t k = 1; k < j; ++k) {
     const sqtag_t p = ((sqtag_t)wj) * ((sqtag_t)k);
