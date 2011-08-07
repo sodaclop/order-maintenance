@@ -1,8 +1,7 @@
 The order maintenance problem (sometimes called "maintaining order in a list") is to maintain a data structure that offers the operations:
 
 bool in_order(const node * x, const node * y): x and y must be pointers to nodes in the same list. Returns true when x precedes y in the list.
-node * singleton(): creates a list with one node and returns a pointer to that node. Nodes are members of only one list.
-node * insert_after(node * x): returns a pointer to a newly created node placed just after x.
+node * insert_after(node * x): returns a pointer to a newly created node placed just after x. Nodes are members of only one list. if x is NULL, creates a list with a single node.
 
 and often:
 
