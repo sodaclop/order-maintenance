@@ -16,7 +16,6 @@ struct record_t {
   tag_t tag;
   record * prev; // only used for delete
   record * next;
-  finger * door;
   record * base;
 };
 
@@ -24,59 +23,47 @@ struct finger_t {
   record * home;
 };
 
-finger * empty() {
-  record * h = malloc(sizeof(record));
+record * make_base() {
+  record * const h = malloc(sizeof(record));
   if (NULL == h) {
     return NULL;
   }
-  finger * ans = malloc(sizeof(finger));
-  if (NULL == ans) {
-    free(h);
-    return NULL;
-  }
-  ans->home = h;
-  h->door = ans;
   h->tag = 0;
   h->prev = h;
   h->next = h;
   h->base = h;
-  return ans;
+  return h;
 }
 
 // Returns a finger to a record one past the record pointed to by the finger xf
-finger * insert(finger * const xf) {
-  assert (NULL != xf);
-  record * const x = xf->home;
+record * insert(record * x) {
+  if (NULL == x) {
+    x = make_base();
+  }
+  if (NULL == x) {
+    return NULL;
+  }
   assert (NULL != x);
   assert (NULL != x->next);
 
-  // The finger y will eventually be the answer we return.
-  finger * y = malloc(sizeof(finger));
-  if (NULL == y) {
-    // malloc has failed
-    return NULL;
-  }
-  // The record h will be pointed to by the answer finger y
+  // The record h will be the answer we eventually return
   record * h = malloc(sizeof(record));
   if (NULL == h) {
     // malloc has failed
-    free(y);
+    free(x);
     return NULL;
   }
-  // Make the finger and its record point to each other:
-  y->home = h;
-  h->door = y;
   // Set up the record so that it will be valid once its new neighbors point to it:
   h->prev = x;
   h->next = x->next;
   h->base = x->base;
 
-
+  // if we are inserting into an empty list
   if (x->next == x) {
     x->next = h;
     x->prev = h;
     h->tag = (~0) >> 1;
-    return y;
+    return h;
   }
 
   count_t j = 1;
@@ -95,7 +82,7 @@ finger * insert(finger * const xf) {
     assert (NULL != xj);
     wj = xj->tag - x->tag;
     if (0 == wj) { // gone around
-      wj = ~0;
+      wj = ~0; //TODO: actually want ~0 + 1
       break;
     }
     j2 = ((tag_t)j) * ((tag_t)j);
@@ -120,20 +107,18 @@ finger * insert(finger * const xf) {
   h->tag = nt;
   x->next->prev = h;
   x->next = h;
-  return y;
+  return h;
 }
 
-int order(const finger * const x, const finger * const y) {
+int order(const record * const x, const record * const y) {
   assert (NULL != x);
   assert (NULL != y);
-  assert (NULL != x->home);
-  assert (NULL != y->home);
-  assert (NULL != x->home->base);
-  assert (NULL != y->home->base);
-  assert (x->home->base == y->home->base);
+  assert (NULL != x->base);
+  assert (NULL != y->base);
+  assert (x->base == y->base);
   
-  const tag_t xtag = x->home->tag - x->home->base->tag;
-  const tag_t ytag = y->home->tag - y->home->base->tag;
+  const tag_t xtag = x->tag - x->base->tag;
+  const tag_t ytag = y->tag - y->base->tag;
 
   if (xtag > ytag) {
     return -1;
@@ -145,21 +130,23 @@ int order(const finger * const x, const finger * const y) {
   return 0;
 }
 
-void delete(finger * const x) {
+void delete(record * const x) {
   assert (NULL != x);
-  assert (NULL != x->home);
-  assert (NULL != x->home->prev);
-  assert (NULL != x->home->next);
-  assert (x->home->base != x->home); // can't delete base
-  x->home->prev->next = x->home->next;
-  x->home->next->prev = x->home->prev;
-  free(x->home);
+  assert (NULL != x->prev);
+  assert (NULL != x->next);
+  assert (x->base != x); // can't delete base
+  x->prev->next = x->next;
+  x->next->prev = x->prev;
+  if (x->base->next == x->base) {
+    free(x->base);
+  }
   free(x);
 }
 
 
 int main() {
-  finger * a = empty();
+  record * a = 0;
+  a = insert(a);
   for (unsigned i = 0; i < (unsigned)~0; ++i) {
     insert(a);
     if (0 == (i % 10000)) {
