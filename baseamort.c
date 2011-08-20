@@ -7,8 +7,10 @@ typedef uint32_t tag_t;
 typedef uint16_t count_t;
 typedef uint64_t sqtag_t;
 
+/*
 struct finger_t;
 typedef struct finger_t finger;
+*/
 struct record_t;
 typedef struct record_t record;
 
@@ -19,9 +21,11 @@ struct record_t {
   record * base;
 };
 
+/*
 struct finger_t {
   record * home;
 };
+*/
 
 record * make_base() {
   record * const h = malloc(sizeof(record));
