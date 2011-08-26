@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "order_maintenance.h"
+
 typedef uint32_t tag_t;
 typedef uint16_t count_t;
 typedef uint64_t sqtag_t;
@@ -11,24 +13,21 @@ typedef uint64_t sqtag_t;
 struct finger_t;
 typedef struct finger_t finger;
 */
-struct record_t;
-typedef struct record_t record;
-
-struct record_t {
+struct ordmain_node {
   tag_t tag;
-  record * prev; // only used for delete
-  record * next;
-  record * base;
+  struct ordmain_node * prev; // only used for delete
+  struct ordmain_node * next;
+  struct ordmain_node * base;
 };
 
 /*
 struct finger_t {
-  record * home;
+  struct ordmain_node * home;
 };
 */
 
-record * make_base() {
-  record * const h = malloc(sizeof(record));
+static struct ordmain_node * make_base() {
+  struct ordmain_node * const h = malloc(sizeof(struct ordmain_node));
   if (NULL == h) {
     return NULL;
   }
@@ -39,8 +38,14 @@ record * make_base() {
   return h;
 }
 
-// Returns a finger to a record one past the record pointed to by the finger xf
-record * insert(record * x) {
+struct ordmain_node * 
+ordmain_insert_before(struct ordmain_node * x) {
+  return ordmain_insert_after(x->prev);
+}
+
+// Returns a finger to a struct ordmain_node one past the struct ordmain_node pointed to by the finger xf
+struct ordmain_node * 
+ordmain_insert_after(struct ordmain_node * x) {
   if (NULL == x) {
     x = make_base();
   }
@@ -50,14 +55,14 @@ record * insert(record * x) {
   assert (NULL != x);
   assert (NULL != x->next);
 
-  // The record h will be the answer we eventually return
-  record * h = malloc(sizeof(record));
+  // The struct ordmain_node h will be the answer we eventually return
+  struct ordmain_node * h = malloc(sizeof(struct ordmain_node));
   if (NULL == h) {
     // malloc has failed
     free(x);
     return NULL;
   }
-  // Set up the record so that it will be valid once its new neighbors point to it:
+  // Set up the struct ordmain_node so that it will be valid once its new neighbors point to it:
   h->prev = x;
   h->next = x->next;
   h->base = x->base;
@@ -71,7 +76,7 @@ record * insert(record * x) {
   }
 
   count_t j = 1;
-  record * xj = x->next;
+  struct ordmain_node * xj = x->next;
   assert (xj != x);
   tag_t wj = xj->tag - x->tag;
   assert (0 != wj);
@@ -92,9 +97,9 @@ record * insert(record * x) {
     j2 = ((tag_t)j) * ((tag_t)j);
   }
 
-  /* reset the tags of j-1 records by evenly spacing them
+  /* reset the tags of j-1 struct ordmain_nodes by evenly spacing them
    */
-  record * xk = x->next;
+  struct ordmain_node * xk = x->next;
   for (count_t k = 1; k < j; ++k) {
     const sqtag_t p = ((sqtag_t)wj) * ((sqtag_t)k);
     const sqtag_t pret = p / ((sqtag_t)j) + (sqtag_t)(x->tag);
@@ -114,7 +119,7 @@ record * insert(record * x) {
   return h;
 }
 
-int order(const record * const x, const record * const y) {
+int order(const struct ordmain_node * const x, const struct ordmain_node * const y) {
   assert (NULL != x);
   assert (NULL != y);
   assert (NULL != x->base);
@@ -134,7 +139,12 @@ int order(const record * const x, const record * const y) {
   return 0;
 }
 
-void delete(record * const x) {
+bool ordmain_in_order(const struct ordmain_node * x, const struct ordmain_node * y) {
+  return 1 == order(x,y);
+}
+
+
+void ordmain_delete(struct ordmain_node * const x) {
   assert (NULL != x);
   assert (NULL != x->prev);
   assert (NULL != x->next);
@@ -147,9 +157,9 @@ void delete(record * const x) {
   free(x);
 }
 
-
+/*
 int main() {
-  record * a = 0;
+  struct ordmain_node * a = 0;
   a = insert(a);
   for (unsigned i = 0; i < (unsigned)~0; ++i) {
     insert(a);
@@ -158,3 +168,4 @@ int main() {
     }
   }
 }
+*/
