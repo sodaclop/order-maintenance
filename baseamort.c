@@ -173,7 +173,9 @@ destroy(struct ordmain_node * const x) {
 }
 
 void ordmain_delete(struct ordmain_node * const x) {
-  assert (NULL != x);
+  if (NULL == x) {
+    return;
+  }
   assert (NULL != x->prev);
   assert (NULL != x->next);
   /* can't delete base, user should never be able to get a pointer to
