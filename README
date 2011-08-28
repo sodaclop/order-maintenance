@@ -1,36 +1,17 @@
-The order maintenance problem (sometimes called "maintaining order in a list") is to maintain a list with arbitrary insertions and deletions as well as order queries, which determine which of two nodes is closer to the head of the list. An API for this structure might look like:
+The order maintenance problem (sometimes called "maintaining order in a list") is to maintain a list with arbitrary insertions and deletions as well as order queries, which determine which of two nodes is closer to the head of the list. See:
 
-/*
-opaque
-*/
-struct node;
+[4] Dietz, Maintaining Order in a Linked List
+[14] Two Simplified Algorithms for Maintaining Order in a List, Bender et al
+[15] Maintaining Order in a Generalized Linked List, Athanasios K. Tsakalidis
+[17] Dietz and Sleator, Two Algorithms for Maintaining Order in a List
 
-/*
-Returns true when x precedes y in the list.
-*/
-bool in_order(const struct node * x, const struct node * y);
+Trivially, linked lists can support these operations in O(1) time for updates and O(n) time for queries, and extensible arrays can support them O(n) time for updates and O(1) time for queries. The goal of this library is to provide faster operations. The asymptotically fastest published order maintenance structures support O(1) updates and queries.
 
-/* 
-Returns a pointer to a newly created node placed just after x. Nodes
-are members of only one list. if x is NULL, creates a list with a
-single node, then returns a pointer to that node.
-*/
-struct node * insert_after(struct node * x);
-
-/*
-Removes the node x from the list it belongs to and frees the memory it
-was using.
-*/
-void delete(struct node * x); 
-
-Trivially, linked lists can support these operations in O(1) time for updates and O(n) time for queries, and extensible arrays can support them O(n) time for updates and O(1) time for queries. The goal of this library is to provide faster operations. The asymptotically fastest published order maintenance structures use O(1) time for both updates and queries.
-
-This structure has many applications, including fully persistent arrays [5], ancestor queries in trees [4][13], partially persistent van Emde Boas trees [1], context trees [4], pattern matching in dynamic texts [2] and trees [3], adaptive programming [6] and self-adjusting computation [7], detecting race conditions [8], searching simplified graphs [9], graph drawing [10], data compression [11], and XML databases [12].
+This structure has many applications, including fully persistent data structures [5][16], ancestor queries in trees [4][13], partially persistent van Emde Boas trees [1], context trees [4], pattern matching in dynamic texts [2] and trees [3], adaptive programming [6] and self-adjusting computation [7], detecting race conditions [8], searching simplified graphs [9], graph drawing [10], data compression [11], and XML databases [12].
 
 [1] Persistent Predecessor Search and Orthogonal Point Location on the Word RAM, Timothy M. Chan, SODA 2011
 [2] Dynamic Pattern Matching, Stephen Alstrup, Gerth Stølting Brodal, and Theis Rauhe, Technical Report, DIKU Report 98/27, Department of Computer Science, University of Copenhagen, 16 pages, 1998, http://cs.au.dk/~gerth/pub/diku-98-27.html
 [3] Efficient preprocessing of simple binary pattern forests, Mikkel Thorup, SWAT 1994
-[4] Dietz, Maintaining Order in a Linked List
 [5] Dietz, Fully Persistent Arrays
 [6] Acar, Blelloch and Harper, "Adaptive Functional Programming", POPL 2002
 [7] Acar, "Aelf-Adjusting Computation" 2005, CMU PhD thesis
@@ -40,3 +21,4 @@ This structure has many applications, including fully persistent arrays [5], anc
 [11] Mohamed Y. Eltabakh, Wing-Kai Hon, Rahul Shah, Walid G. Aref, Jeffrey Scott Vitter: The SBC-tree: an index for run-length compressed sequences. EDBT 2008: 523-534
 [12] Fast Ordering for Changing XML Data, Damien K. Fisher, Franky Lam, William M. Shui, Raymond K. Wong, June 2003
 [13] Alavi, Extensible Encoding of Type Hierarchies, POPL 2008
+[16] Making Data Structures Persistent, Driscoll et al
