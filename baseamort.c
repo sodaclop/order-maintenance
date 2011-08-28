@@ -123,10 +123,13 @@ ordmain_insert_before(struct ordmain_node * x) {
   order(const struct ordmain_node * const x, const struct ordmain_node * const y):
 
   If x and y are not valid pointers to ordmain_nodes in the same list,
-  sets errno to EINVAL and returns 0.
+  sets errno to EINVAL and returns -2.
 
-  Returns 1 if ${x} comes before ${y}, -1 if ${y} comes before ${x},
-  and 0 is they are the same node.
+  Returns -1 if ${x} comes before ${y}, 1 if ${y} comes before ${x},
+  and 0 is they are the same node. 
+
+  This is meant to be similar to strcmp, with the exception of the -2
+  return.
  */
 static int 
 order(const struct ordmain_node * const x, const struct ordmain_node * const y) {
@@ -136,21 +139,20 @@ order(const struct ordmain_node * const x, const struct ordmain_node * const y) 
     errno = EINVAL; // TODO: is this the right errno?
     return -2;
   }
-  assert (NULL != x);
-  assert (NULL != y);
+  // broken nodes:
   assert (NULL != x->base);
   assert (NULL != y->base);
-  assert (x->base == y->base);
   
   const tag_t xtag = x->tag - x->base->tag;
   const tag_t ytag = y->tag - y->base->tag;
 
   if (xtag > ytag) {
-    return -1;
-  }
-  if (xtag < ytag) {
     return 1;
   }
+  if (xtag < ytag) {
+    return -1;
+  }
+  // two different nodes in the same list with the same tag
   assert (x == y);
   return 0;
 }
