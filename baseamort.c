@@ -190,16 +190,3 @@ void ordmain_delete(struct ordmain_node * const x) {
   }
   destroy(x);
 }
-
-/*
-int main() {
-  struct ordmain_node * a = 0;
-  a = insert(a);
-  for (unsigned i = 0; i < (unsigned)~0; ++i) {
-    insert(a);
-    if (0 == (i % 10000)) {
-      printf("%u\n", i);
-    }
-  }
-}
-*/
