@@ -1,7 +1,8 @@
 #include <stdint.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <stdio.h>
+#include <stdio.h> // TODO: is this needed any more?
+#include <errno.h>
 
 #include "order_maintenance.h"
 
@@ -119,7 +120,28 @@ ordmain_insert_after(struct ordmain_node * x) {
   return h;
 }
 
-int order(const struct ordmain_node * const x, const struct ordmain_node * const y) {
+struct ordmain_node * 
+ordmain_insert_before(struct ordmain_node * x) {
+  return ordmain_insert_after(x->prev);
+}
+
+/*
+  order(const struct ordmain_node * const x, const struct ordmain_node * const y):
+
+  If x and y are not valid pointers to ordmain_nodes in the same list,
+  sets errno to EINVAL and returns 0.
+
+  Returns 1 if ${x} comes before ${y}, -1 if ${y} comes before ${x},
+  and 0 is they are the same node.
+ */
+static int 
+order(const struct ordmain_node * const x, const struct ordmain_node * const y) {
+  if ((NULL == x)
+      || (NULL == y)
+      || (x->base != y->base)) {
+    errno = EINVAL; // TODO: is this the right errno?
+    return -2;
+  }
   assert (NULL != x);
   assert (NULL != y);
   assert (NULL != x->base);
