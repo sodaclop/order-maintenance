@@ -160,6 +160,18 @@ bool ordmain_in_order(const struct ordmain_node * x, const struct ordmain_node *
 }
 
 
+static void
+destroy(struct ordmain_node * const x) {
+  /* Unset base members to assist in catching memory errors. */
+#ifndef NDEBUG
+  x->base = NULL;
+  x->prev = NULL;
+  x->next = NULL;
+#endif /* NDEBUG */
+  free(x);
+  return;
+}
+
 void ordmain_delete(struct ordmain_node * const x) {
   assert (NULL != x);
   assert (NULL != x->prev);
@@ -172,9 +184,9 @@ void ordmain_delete(struct ordmain_node * const x) {
   /* If the only node left is the base, free it. The user can't have a
      pointer to it, so unless we free it now, it will be leaked.*/
   if (x->base->next == x->base) {
-    free(x->base);
+    destroy(x->base);
   }
-  free(x);
+  destroy(x);
 }
 
 /*
