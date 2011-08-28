@@ -10,24 +10,23 @@ typedef uint32_t tag_t;
 typedef uint16_t count_t;
 typedef uint64_t sqtag_t;
 
-/*
-struct finger_t;
-typedef struct finger_t finger;
-*/
 struct ordmain_node {
   tag_t tag;
-  struct ordmain_node * prev; // only used for delete
+  /*
+    ${prev} is used only for delete and ordmain_insert_before.
+   */
+  struct ordmain_node * prev; 
   struct ordmain_node * next;
   struct ordmain_node * base;
 };
 
-/*
-struct finger_t {
-  struct ordmain_node * home;
-};
+/* 
+make_base(void):
+Creates an empty list and returns a pointer to the base ordmain_node.
+Returns NULL on error.
 */
-
-static struct ordmain_node * make_base() {
+static struct ordmain_node * 
+make_base() {
   struct ordmain_node * const h = malloc(sizeof(struct ordmain_node));
   if (NULL == h) {
     return NULL;
@@ -37,11 +36,6 @@ static struct ordmain_node * make_base() {
   h->next = h;
   h->base = h;
   return h;
-}
-
-struct ordmain_node * 
-ordmain_insert_before(struct ordmain_node * x) {
-  return ordmain_insert_after(x->prev);
 }
 
 // Returns a finger to a struct ordmain_node one past the struct ordmain_node pointed to by the finger xf
@@ -170,9 +164,13 @@ void ordmain_delete(struct ordmain_node * const x) {
   assert (NULL != x);
   assert (NULL != x->prev);
   assert (NULL != x->next);
-  assert (x->base != x); // can't delete base
+  /* can't delete base, user should never be able to get a pointer to
+     base anyway: */
+  assert (x->base != x); 
   x->prev->next = x->next;
   x->next->prev = x->prev;
+  /* If the only node left is the base, free it. The user can't have a
+     pointer to it, so unless we free it now, it will be leaked.*/
   if (x->base->next == x->base) {
     free(x->base);
   }
