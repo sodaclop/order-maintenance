@@ -7,6 +7,9 @@ CWARN_FLAGS=$(BASE_CFLAGS) -O -Wuninitialized
 	$(CC) -c $(CWARN_FLAGS) $(CPPFLAGS) $< -o $@
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
 
-.PHONY: all
+.PHONY: all test
 
-all: baseamort.o
+all: baseamort.o test
+
+test: baseamort.o
+	$(MAKE) -C test
