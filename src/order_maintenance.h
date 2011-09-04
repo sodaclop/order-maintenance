@@ -8,6 +8,22 @@ opaque
 */
 struct ordmain_node;
 
+#ifndef NDEBUG
+typedef uint32_t tag_t;
+typedef uint16_t count_t;
+typedef uint64_t sqtag_t;
+
+struct ordmain_node {
+  tag_t tag;
+  /*
+    ${prev} is used only for delete and ordmain_insert_before.
+   */
+  struct ordmain_node * prev; 
+  struct ordmain_node * next;
+  struct ordmain_node * base;
+};
+#endif
+
 /*
 Returns true when x precedes y in the list.
 */

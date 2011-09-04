@@ -6,6 +6,8 @@
 
 #include "order_maintenance.h"
 
+#ifdef NDEBUG
+
 typedef uint32_t tag_t;
 typedef uint16_t count_t;
 typedef uint64_t sqtag_t;
@@ -19,6 +21,8 @@ struct ordmain_node {
   struct ordmain_node * next;
   struct ordmain_node * base;
 };
+
+#endif
 
 /* 
 make_base(void):
