@@ -12,7 +12,7 @@ This structure has many applications, including fully persistent data structures
 [4] Dietz, Maintaining Order in a Linked List
 [5] Dietz, Fully Persistent Arrays
 [6] Acar, Blelloch and Harper, "Adaptive Functional Programming", POPL 2002
-[7] Acar, "Aelf-Adjusting Computation" 2005, CMU PhD thesis
+[7] Acar, "Self-Adjusting Computation" 2005, CMU PhD thesis
 [8] Fineman, Jeremy T. "Efficient on the fly maintenance of series-parallel relationships", http://dspace.mit.edu/handle/1721.1/3857
 [9] Dynamic Tree Corss Products, Raitner, ISAAC 2004
 [10] Optimal three-dimensional orthogonal graph drawing in the general position model, David R. Wood, TCS 2003
