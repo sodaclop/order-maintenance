@@ -68,6 +68,11 @@ int main(int argc, char * argv[]) {
 
   //  const time_t seed = 1314210100;
 
+  // had changed behavior of in_order computation to match strcmp,
+  // forgot to change conversion of result (-2,-1,0,1) to bool.
+
+  //  const time_t seed = 1315098207;
+
   srand(seed);
   cerr << "seed: " << seed << endl;
   

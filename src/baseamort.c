@@ -162,7 +162,7 @@ order(const struct ordmain_node * const x, const struct ordmain_node * const y) 
 }
 
 bool ordmain_in_order(const struct ordmain_node * x, const struct ordmain_node * y) {
-  return 1 == order(x,y);
+  return -1 == order(x,y);
 }
 
 
