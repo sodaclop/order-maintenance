@@ -82,46 +82,51 @@ int main(int argc, char * argv[]) {
   while (a.size() < size) {
     const int toinsert = rand();
     //cerr << "to insert: " << toinsert << endl;
-    const dart_t::ord_iter place = a.insert(toinsert,NULL);
+    const dart_t::iterator place = 
+      a.insert(make_pair(toinsert,reinterpret_cast<ordmain_node*>(NULL)));
     if (place == a.end()) {
       continue; // value was already in dartboard
     }
     if (place == a.begin()) { // must insert_before
-	dart_t::ord_iter after_place = place;
+	dart_t::iterator after_place = place;
 	++after_place;
       if (after_place == a.end()) { // can't insert_before, this is the first item
-	place->second = ordmain_insert_after(NULL);
+	place->second.val = ordmain_insert_after(NULL);
       } else {
-	ordmain_node * const after = after_place->second;
-	place->second = ordmain_insert_before(after);
+	ordmain_node * const after = after_place->second.val;
+	place->second.val = ordmain_insert_before(after);
       }
     } else {
-      dart_t::ord_iter before_place = place;
+      dart_t::iterator before_place = place;
       --before_place;
-      ordmain_node * const before = before_place->second;
-      place->second = ordmain_insert_after(before);
+      ordmain_node * const before = before_place->second.val;;
+      place->second.val = ordmain_insert_after(before);
     }
 
     while ((a.size() > 0) && (0 == rand() % 2)) {
-      const unsigned i = rand() % a.size();
-      dart_t::ord_iter p = a.get_nth(i);
-      ordmain_delete(p->second);
-      a.erase_nth(i);
+      dart_t::iterator p = a.get_random(rand);
+      ordmain_delete(p->second.val);
+      a.erase(p);
     }
     
     if (0 == a.size()) {
       continue;
     }
-    const unsigned i = rand() % a.size();
-    const unsigned j = rand() % a.size();
 
-    dart_t::ord_const_iter p = a.get_nth(i);
-    dart_t::ord_const_iter q = a.get_nth(j);
+    dart_t::const_iterator p = a.get_random(rand);
+    dart_t::const_iterator q = a.get_random(rand);
     
     //cerr << "to order: " << p->first << ' ' << q->first << endl;
 
+    ordmain_node * debugp = p->second.val;
+    ordmain_node * debugq = q->second.val;
+
+    //cerr << boolalpha
+    //<< (p->first < q->first) << endl
+    //<< ordmain_in_order(p->second, q->second) << endl;
+
     assert ((p->first < q->first) ==
-	    (ordmain_in_order(p->second, q->second)));
+	    (ordmain_in_order(p->second.val, q->second.val)));
 
 
   }
