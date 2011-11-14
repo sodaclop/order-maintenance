@@ -6,6 +6,13 @@ Trivially, linked lists can support these operations in O(1) time for updates an
 
 This structure has many applications, including fully persistent data structures [5][16], ancestor queries in trees [4][13][15][18], partially persistent van Emde Boas trees [1], context trees [4], pattern matching in dynamic texts [2] and trees [3], adaptive programming [6] and self-adjusting computation [7], detecting race conditions [8], searching simplified graphs [9], graph drawing [10], data compression [11], XML databases [12], and geometric data structures [19].
 
+There are some implementations of data structures for this problem in source form in other libraries:
+
+http://www.ics.uci.edu/~eppstein/PADS/OrderedSequence.py
+https://raw.github.com/Sciss/TemporalObjects/master/src/main/scala/de/sciss/confluent/TotalOrder.scala
+https://raw.github.com/Sciss/TreeTests/master/src/main/scala/de/sciss/collection/mutable/TotalOrder.scala
+https://raw.github.com/Sciss/TreeTests/master/src/main/scala/de/sciss/collection/mutable/TotalOrder2.scala
+
 [1] Persistent Predecessor Search and Orthogonal Point Location on the Word RAM, Timothy M. Chan, SODA 2011
 [2] Dynamic Pattern Matching, Stephen Alstrup, Gerth Stølting Brodal, and Theis Rauhe, Technical Report, DIKU Report 98/27, Department of Computer Science, University of Copenhagen, 16 pages, 1998, http://cs.au.dk/~gerth/pub/diku-98-27.html
 [3] Efficient preprocessing of simple binary pattern forests, Mikkel Thorup, SWAT 1994
